@@ -1,0 +1,130 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage[shortlabels]{enumitem}
+\usepackage{changepage}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=magenta,
+    urlcolor=cyan}
+
+\title{Modelagem de um sistema dinâmico planta-herbívoro levando em conta a presença de plantas tóxicas no ambiente}
+\author{André Ribeiro, Erlon Kelvim}
+
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+
+Embora o estudo da relação entre herbívoros-plantas já seja estudado a muitos anos, apenas a pouco tempo começou-se as pesquisas sobre a influência da toxidade das plantas sobre tal relação. Nosso trabalho busca usar como base empírica a relação mamífero-planta a fim criar um modelo matemático em que p efeito negativo gerado pela toxidade das plantas seja expresso de maneira mais explícita em nosso modelo \cite{LI} \cite{FENG}.
+
+O modelo mais usado para análise da relação mamífero-planta é o Holling tipo II \cite{CRAWFORD}\cite{HOLLING} que foi proposto em um sistema onde haja uma abundância de presas (plantas) e a reação do predador a tal sistema e chegou-se que a resposta funcional seria um aumento do consumo da presa a medida que sua biomassa aumenta, até a capacidade do predador de comer a presa esteja saciada, a partir disso, independente do aumento da biomassa da presa o consumo do predador se manterá constante. Entretanto a existência de toxinas nas plantas pode alterar esse sistema \cite{ZHILAN}, pois a variação da toxidade das plantas faz com que os mamíferos se alimentem seletivamente, fazendo com que a diversidade da vegetação e os processos do ecossistema sejam afetados.
+
+
+\section{Metodologia}
+
+Inicialmente, consideramos o sistema mais simples possível, onde há somente uma planta e não há toxicidade. Seja $n$ o número de galhos de plantas disponíveis no sistema, $t_b$ o tempo necessário para um herbívoro encontrar o galho, $r$ a taxa de crescimento por unidade de galho e $t_h$ o tempo (em segundos) que um herbívoro leva para consumir e digerir uma unidade de galho. Com essas informações, temos que o total de galhos encontrados em um dado tempo $t_b$ é $T_g = n r t_b$ e o tempo total gasto pelo herbívoro consumindo galhos é $T_h = h n r t_b = h T_g$. Definimos então a taxa de consumo
+\begin{equation}
+    f(n) \coloneqq \frac{T_g}{t_b + T_h} = \frac{n r}{1 + t_h n r}
+\end{equation}
+Note que da maneira como $t_h$ foi definido, temos que $h_{\max} = \frac{1}{t_h}$ é o número máximo de galhos que um herbívoro pode consumir por unidade de tempo, na ausência de toxicidade. Note também que
+\begin{equation}
+    h_{\max} = \lim_{n \to \infty} f(n)
+\end{equation}
+i.e. $h_{\max}$ é assintota da função $f$. Contudo, nossa análise até aqui considerava o sistema incompleto, sem toxicidade. Na presença dessa nova variável, devemos ter uma taxa real de consumo $\eta(n)$ menor que $f(n)$ e uma quantidade máxima de galhos contendo toxinas $H_{\max}$ menor que $h_{\max}$. Para encontrar a função $\eta$, note que a função $R = \frac{\eta}{f}$ deve ser uma função decrescente de $f$, com $R \to 1$ quando $f \to 0$, já que se o consumo está diminuindo, o consumo de plantas com toxicidade está aumentando, e se $\frac{H_{\max}}{\alpha}$ é um valor limitante para $f$, $R \to 0$ quando $f \to \frac{H_{\max}}{\alpha}$, já que há plantas em abundância e a taxa de consumo de plantas com toxicidade diminui. Uma boa maneira de expressar essas propriedades é considerar $R$ como a seguinte função linear \[ R = 1 - \frac{\alpha f}{H_{\max}} \] onde a constante de proporção $\alpha$ é escolhida de modo que $\max\{\eta\} = H_{\max}$. Lembrando que $R = \frac{\eta}{f}$, temos que
+\begin{equation*}
+    \frac{\eta}{f} = 1 - \frac{\alpha f}{H_{\max}}
+\end{equation*}
+logo
+\begin{equation}
+    \eta(f) = f\left(1 - \frac{\alpha f}{H_{\max}}\right)
+\end{equation}
+Para encontrar o valor de $\alpha$, vamos encontrar o máximo da função $\eta$
+\begin{equation*}
+    \eta' = f'\left(1 - \frac{2 \alpha f}{H_{\max}}\right) \\
+\end{equation*}
+Como buscamos $\eta' = 0$, devemos ter $f' = 0 \quad \lor \quad 1 - \frac{2 \alpha f}{H_{\max}} = 0$. O primeiro caso ocorre apenas quando $n \to \infty$, iremos então considerar o segundo caso
+\begin{align*}
+    1 - \frac{2 \alpha f}{H_{\max}} &= 0 \\
+    \frac{2 \alpha f}{H_{\max}} &= 1 \\
+    \frac{H_{\max}}{2\alpha} &= f
+\end{align*}
+Substituindo o valor que maximiza a função $\eta$ obtemos
+\begin{align*}
+    \eta\left(\frac{H_{\max}}{2\alpha}\right) &= \frac{H_{\max}}{2\alpha}\left(1 - \frac{\alpha \cdot \frac{H_{\max}}{2\alpha}}{H_{\max}} \right) \\
+                                                &= \frac{H_{\max}}{2\alpha} \cdot \frac{1}{2} \\
+                                                &= \frac{H_{\max}}{4\alpha} 
+\end{align*}
+Havíamos escolhido $\alpha$ de modo que $\max\{\eta\} = H_{\max}$, então $\alpha = \frac{1}{4}$. Como $\eta$ é a taxa de consumo, faz sentido considerar apenas o intervalo de definição para o qual $\eta \geq 0$, ou seja
+\begin{equation*}
+    \eta \geq 0\;\Longrightarrow\;f\left(1 - \frac{f}{4H_{\max}}\right) \geq 0 \\
+\end{equation*}
+Já que $f > 0$, devemos ter
+\begin{align*}
+    1 - \frac{f}{4H_{\max}} \geq 0\;\Longrightarrow\;1 \geq \frac{f}{4H_{\max}}\;\Longrightarrow\;4H_{\max} \geq f
+\end{align*}
+Por (2), obtemos
+\begin{align*}
+    4H_{\max} \geq f \quad \land \quad f < h_{\max}\;\Longrightarrow\;4H_{\max} > h_{\max}\;\Longrightarrow\;H_{\max} > \frac{h_{\max}}{4}
+\end{align*}
+Temos então a seguinte relação entre a quantidade máxima de galhos contendo toxinas consumidas por um herbívoro e a quantidade máxima de galhos consumidas por um herbívoro
+\begin{equation}
+    \frac{h_{\max}}{4} < H_{\max} < h_{\max}
+\end{equation}
+Com isso, temos o seguinte sistema de EDO's que descreve nosso sistema
+\begin{align*}
+    \frac{dn}{dt} &= rn\left( 1 - \frac{n}{W} \right) - \eta(n)X \\
+    \frac{dX}{dt} &= Y\eta(n)X - XZ
+\end{align*}
+onde $X = X(t)$ representa a quantidade de herbívoros no tempo $t$, $Y$  a conversão da biomassa de espécies de plantas consumidas em novos herbívoros, Z a taxa de morte per capita de herbívoros devido a causas não relacionadas à toxicidade da planta e $W$ a capacidade de carregamento do herbívoro. \\
+
+Podemos obter a taxa real de consumo como uma função da abundância de plantas no sistema substituindo a equação (1) na equação (3)
+\begin{align}
+    \eta(n) &= f(n)\left(1 - \frac{f(n)}{4H_{\max}}\right) \nonumber \\
+            &= \frac{n r}{1 + t_h n r} \left( 1 - \frac{n r}{4H_{\max}(1 + t_h n r)} \right)
+\end{align}
+Para generalizar o modelo obtido, consideramos os vetores $n = (n_1,n_2,\cdots,n_k)$, $r = (r_1,r_2,\cdots,r_k)$, $t_h = (t_{h_1},t_{h_2},\cdots,t_{h_k})$ e $H_{\max} = (H_{\max_1}, H_{\max_2},\cdots,H_{\max_k})$, onde cada componente é relativo à planta da espécie $i$, e cada $r_i$ é considerado em um ambiente em que não há competição de recursos pelas plantas. Podemos então obter $f = (f_1,f_2,\cdots,f_k)$ e $\eta = (\eta_1,\eta_2,\cdots,\eta_k)$, onde cada componente é dada por
+\begin{equation}
+    f_i(n) = \frac{n_i r_i}{1 + \sum_{i=1}^{k} t_{h_i} n_i r_i}
+\end{equation}
+e
+\begin{equation}
+    \eta_i(n)  = f_i(n)\left(1 - \frac{f_i(n)}{4H_{\max_i}}\right)
+\end{equation}
+Utilizando a equação acima, nosso modelo para o sistema planta-herbívoro é descrito pelo seguinte sistema de EDO's
+\begin{equation}
+\begin{aligned}
+    \frac{dn_i}{dt} &= r_i n_i \left( 1 - \frac{n_i + \sum_{\overset{j=1}{j \neq i}}^k \beta_{ij}n_j}{W_i} \right) - \eta_i(n)X \\
+    \frac{dX}{dt}   &= \sum_{j=1}^k Y_j\eta_j(n)X - XZ
+\end{aligned}
+\end{equation}
+onde $\beta_{ij}$ é o parâmetro de competição dos herbívoros, que mede a intensidade de competição da espécie $j$ contra a espécie $i$. Todos os parâmetros e suas unidade estão definidos na tabela abaixo, para alguns tipos de planta. Note que para cada $i$ (espécie), os valores que acima possuem esse índice podem variar em relação aos valores abaixo
+\begin{table}[h!]
+    \begin{tabular}{|c|p{9cm}|r|} \hline
+    Parâmetro  & Unidade & Valor (ou intervalo) \\ \hline
+    $t_b$ & Taxa de encontro por unidade de galho & [0.0001,0.0005] \\
+    $r$ & Máximo de novas unidades de galhos/galho por dia & [0.003,0.01] \\
+    $t_h$ & Tempo para consumir uma unidade de galho na ausência de toxinas & [0.0025,0.03125] \\
+    $W$ & Capacidade de carga & $[10^4,10^5]$ \\
+    $Y$ & Constante de conversão (herbívoro/unidade de galho) & [0.00003,0.00006] \\
+    $Z$ & Taxa de morte de herbívoros per capita &  [0.00003,0.0002] \\
+    $H_{\max}$ & Máximo de unidades de galho contendo toxina (de um certo tipo) que um herbívoro pode consumir por dia & [8,80] \\
+    $\beta$ & Coeficiente de competição & $[10^{-1},10]$ \\ \hline
+    \end{tabular}
+    \caption{Parâmetros, unidades e valores das variáveis para algumas espécies de plantas}
+    \label{tab:my_label}
+\end{table}
+
+\newpage
+
+\bibliography{ref}
+\bibliographystyle{ieeetr}
+
+
+
+\end{document}
